@@ -1,0 +1,9 @@
+SELECT river.river_name, state.state_name FROM river JOIN state ON river.state = state.state_name WHERE state = 'California';
+
+SELECT city.name FROM city JOIN state ON city.state_name = state.name JOIN highlow ON state.name = highlow.state_name WHERE highlow.highest_elevation = (SELECT MAX(highlow.highest_elevation) FROM highlow WHERE highlow.state_name = state.name) AND city.population = (SELECT MIN(city.population) FROM city WHERE city.state_name = state.name) ORDER BY city.name ASC;
+
+<asked for clarification>
+
+SELECT rivers.river_name, LENGTH(rivers.river_name) as river_length FROM rivers JOIN borders ON rivers.state_name = borders.state_name WHERE borders.state_name IN (SELECT state_name FROM borders GROUP BY state_name ORDER BY COUNT(*) DESC) ORDER BY river_length DESC;
+
+SELECT * FROM states WHERE border_info.border = '';

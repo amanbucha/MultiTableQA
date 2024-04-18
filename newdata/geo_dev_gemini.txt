@@ -1,0 +1,54 @@
+
+SELECT r.river_name
+FROM city c
+JOIN river r ON c.state_name = r.traverse
+WHERE c.population = (SELECT MAX(population) FROM city WHERE country_name = 'US') AND c.country_name = 'US';
+
+
+SELECT city_name
+FROM city
+WHERE state_name = (SELECT state_name FROM state ORDER BY area DESC LIMIT 1)
+ORDER BY population ASC
+LIMIT 1;
+
+WITH MississippiState AS (
+  SELECT state_name
+  FROM state
+  WHERE state_name = 'Mississippi' 
+),
+BorderingStates AS (
+  SELECT b.border
+  FROM MississippiState ms
+  JOIN border_info b ON ms.state_name = b.state_name
+)
+SELECT h.highest_point
+FROM BorderingStates bs
+JOIN highlow h ON bs.border = h.state_name;
+
+
+
+
+WITH MaxBorderState AS (
+    SELECT state_name, COUNT(*) AS border_count
+    FROM border_info
+    GROUP BY state_name
+    ORDER BY border_count DESC
+    LIMIT 1
+),
+BorderingStates AS (
+    SELECT border AS bordering_state
+    FROM border_info
+    WHERE state_name = (SELECT state_name FROM MaxBorderState)
+)
+SELECT r.river_name, MAX(r.length) AS max_length
+FROM river r
+JOIN BorderingStates bs ON r.traverse = bs.bordering_state
+GROUP BY r.river_name
+ORDER BY max_length DESC
+LIMIT 1;
+
+
+SELECT s1.state_name
+FROM state s1
+LEFT JOIN border_info b ON s1.state_name = b.state_name
+WHERE b.border IS NULL;

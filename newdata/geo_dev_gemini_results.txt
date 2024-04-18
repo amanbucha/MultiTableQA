@@ -1,0 +1,5 @@
+[]
+[('anchorage',)]
+[('cheaha mountain',), ('magazine mountain',), ('driskill mountain',), ('clingmans dome',)]
+[('missouri', 3968)]
+[('alaska',), ('hawaii',)]

@@ -1,0 +1,4 @@
+1054 (42S22): Unknown column 'state' in 'where clause'
+1054 (42S22): Unknown column 'city.name' in 'field list'
+1146 (42S02): Table 'geoquery.rivers' doesn't exist
+1146 (42S02): Table 'geoquery.states' doesn't exist

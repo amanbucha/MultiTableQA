@@ -1,0 +1,134 @@
+ To find the rivers that run through the state with the largest city in the US, we need to first identify the city that is the largest in the US. To do this, we can use the following SQL query:
+```
+SELECT MAX(population) AS max_population, city_name
+FROM database
+WHERE country_name = 'US'
+ORDER BY population DESC
+LIMIT 1;
+```
+This query will return the city with the largest population in the US. We can then use this information to find the rivers that run through that state by joining the `database` table with itself. Here's the steps:
+
+1. Assume the resulting table from the previous query is named `maxcity`. Then we will use the `maxcity` table to find the state of the city with the largest population in the US. So we will use the following SQL query:
+```
+SELECT DISTINCT colony['state_name'] AS state_name
+FROM database
+INNER JOIN maxcity ON db['unt']= 'state'
+WHERE db['unt'] == 'city' AND db['col'] == 'city_name'
+```
+2. From the above query, we get `state_name` as result. Now we will join this table with the `database` table to get the rivers that run through this state. We will use the following SQL query:
+```
+SELECT DISTINCT db['unt'] AS river_name
+FROM database
+INNER JOIN rivers ON db['col'] == 'river_name'
+JOIN (
+SELECT DISTINCT colony['state_name'] AS state_name
+FROM database
+INNER JOIN maxcity ON db['unt']= 'state'
+WHERE db['unt'] == 'city' AND db['col'] == 'city_name'
+) rivers ON db['unt'] = rivers.col AND db['col'] = 'river_name'
+```
+
+The final answer will be the `river_name` value. Sure, I can help you with that! Here's how to generate the SQL query to find the smallest city in the largest state:
+
+1. From the given schema, we can find out that the "state" entity has a "state_name" and a "population" column, and the "city" entity has a "city_name" and a "population" column. We also know that the "traverse" column in the "river" entity represents the "state" it passes through.
+2. We need to identify the state with the largest population, and then find the smallest city within that state. To do this, we can first query the "state" table to find the state with the largest population:
+```sql
+WITH max_state AS (
+  SELECT state, MAX(population) as max_population
+  FROM state
+  GROUP BY state
+),
+max_city AS (
+  SELECT city_name, population
+  FROM city
+  WHERE state = (SELECT state FROM state WHERE population = max_population)
+  ORDER BY population ASC
+  LIMIT 1
+)
+SELECT max_city.city_name, max_city.population
+FROM max_city;
+```
+Here, we use a common table expression (CTE) to identify the state with the largest population, and then use another CTE to find the smallest city within that state.
+
+1. The first CTE, "max_state", groups the "state" table by "state" and finds the maximum population using the "MAX" function. We use a subquery to filter this by the "state" name that matches the "max_population" value.
+2. The second CTE, "max_city", selects the "city_name" and "population" columns from the "city" table where the "state" name matches the "max_population" value found in the previous step. We order the result by "population" in ascending order and use the "LIMIT" keyword to select only the smallest city.
+3. The final SELECT statement selects the "city_name" and "population" columns from the "max_city" CTE.
+
+So, the SQL query to find the smallest city in the largest state is:
+```sql
+WITH max_state AS (
+ The SQL query to retrieve the highest points of states surrounding Mississippi would be:
+```
+SELECT h.high_point, s.state_name
+FROM highlow h
+LEFT JOIN state s ON h.state_name = s.state_name
+WHERE h.state_name IN 
+  (
+    SELECT state_name FROM state WHERE border_info LIKE '%Mississippi%'
+  )
+ORDER BY h.high_point DESC;
+```
+Here are the steps to explain the query:
+
+1. We start by selecting the high point column (h.high\_point) and the state name column (s.state\_name) from the `highlow` and `state` tables, respectively.
+2. We use a `LEFT JOIN` statement to combine the `highlow` table with the `state` table, matching records where the `state_name` columns are the same.
+3. We use a `WHERE` clause to filter the results to only include states that have Mississippi in their `border_info`. This is done by selecting the `state_name` column from the `state` table and then filtering it using a subquery that selects the states with Mississippi in their `border_info`.
+4. We order the results in descending order based on the `high_point` column.
+5. Finally, we use the `SELECT` statement to return only the necessary columns with the result. SQL:
+```
+SELECT R.name AS name
+FROM rivers R
+JOIN states S ON R.traverse = S.state_name
+WHERE S.state_name IN (
+    SELECT S2.state_name
+    FROM states S2
+    INNER JOIN states S1 ON S2.state_name = S1.state_name
+    WHERE S1.state_name <> S2.state_name | S2.state_name <> S1.state_name
+    GROUP BY S2.state_name
+    ORDER BY COUNT(*) DESC
+)
+GROUP BY R.name
+ORDER BY LENGTH(R.name) DESC
+LIMIT 1;
+```
+Here's how the query works:
+
+1. We start by selecting the name of the river that passes the states that border the state that borders the most states.
+2. We join the rivers with states on the traverse column, which is the column that shows the state the river traverses.
+3. Then, we use a subquery to get a list of the states that border the most states. We do this by finding all pairs of states that one borders the other, and counting how many states each state is bordered by. We then find the states with the highest count.
+4. We group the initial query by the name of the river, and orders it by the length of the name in descending order so that we get the longest river first.
+5. Finally, we limit the output to the first, which will be the longest river. Sure, I can help you with that! Here's what I suggest:
+
+First, we need to connect to the database and establish a connection with the database.
+Assuming the database is a relational database, we can use a driver such as mysql-connector-python to connect to the database.
+```
+import mysql.connector
+# replace the values for host, user, password and database_name
+# with the actual values for your database
+mydb = mysql.connector.connect(host='localhost', user='your_username', password='your_password', database='your_database_name')
+```
+Next, we need to retrieve the states with no bordering states from the database. To do this, we can use a SQL query that joins the "border\_info" table with the "state" table and returns only the states that don't have any borders.
+```
+# We filter the results to only include states with no borders
+# in the border_info table
+# the SELECT \* will return all columns
+# skiware is replaced with the name of the table in your database
+query = "SELECT * FROM border_info, state WHERE state.state_name = border_info.state_name AND border_info.border IS NULL"
+# execute the SQL query
+mycursor = mydb.cursor()
+mycursor.execute(query)
+```
+The above query returns all the records from the border\_info and state tables where state.state\_name = border\_info.state\_name and border\_info.border is NULL.
+
+Finally, we can iterate through the results and print out the required information. You can modify the above query to filter only the required columns.
+```
+# Fetch all the rows
+rows = mycursor.fetchall()
+
+# Iterate through each row
+for x in rows:
+    print(x)
+```
+This will print out the rows returned by the query.
+
+I hope this helps! Let me know if you have any questions.

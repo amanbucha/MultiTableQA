@@ -1,0 +1,5 @@
+1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'state_name ORDER BY MAX(c.population) DESC LIMIT 1)' at line 1
+[('anchorage',)]
+[('cheaha mountain',), ('magazine mountain',), ('driskill mountain',), ('clingmans dome',)]
+1054 (42S22): Unknown column 'r.state_name' in 'IN/ALL/ANY subquery'
+[('alaska',), ('hawaii',)]
