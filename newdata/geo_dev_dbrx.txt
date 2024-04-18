@@ -1,0 +1,45 @@
+
+SELECT r.river_name FROM river r JOIN state s ON r.state_name = s.state_name WHERE s.state_name = (SELECT s.state_name FROM city c JOIN state s ON c.state_name = s.state_name WHERE c.country_name = 'US' GROUP BY s state_name ORDER BY MAX(c.population) DESC LIMIT 1);
+
+
+SELECT c.city_name FROM city c JOIN state s ON c.state_name = s.state_name 
+WHERE s.area = (SELECT MAX(area) FROM state) 
+ORDER BY c.population ASC 
+LIMIT 1;
+
+
+SELECT hl.highest_point
+FROM highlow hl
+JOIN state s ON hl.state_name = s.state_name
+JOIN border_info bi ON s.state_name = bi.state_name
+WHERE bi.border = 'Mississippi';
+
+
+SELECT r.river_name, r.length
+FROM river r
+WHERE r.river_name IN (
+    SELECT r.river_name
+    FROM river r
+    WHERE r.state_name IN (
+        SELECT b.state_name
+        FROM border_info b
+        WHERE b.border = (
+            SELECT b.state_name
+            FROM border_info b
+            GROUP BY b.state_name
+            ORDER BY COUNT(*) DESC
+            LIMIT 1
+        )
+    )
+)
+ORDER BY r.length DESC
+LIMIT 1;
+
+
+SELECT state_name
+FROM state
+WHERE state_name NOT IN (
+    SELECT state_name
+    FROM border_info
+    WHERE border IS NOT NULL
+);
